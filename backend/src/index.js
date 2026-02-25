@@ -3,6 +3,7 @@ const cors = require('cors')
 const cookieParser = require('cookie-parser')
 const { PORT, CLIENT_URL } = require('./config')
 const authRoutes = require('./routes/auth')
+const projectsRoutes = require('./routes/projects')
 
 const app = express()
 
@@ -14,6 +15,7 @@ app.use(express.json())
 app.use(cookieParser())
 
 app.use('/auth', authRoutes)
+app.use('/projects', projectsRoutes)
 
 app.get('/', (req, res) => {
   res.json({ message: 'DeployKit API is running' })
