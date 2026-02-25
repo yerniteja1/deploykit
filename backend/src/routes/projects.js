@@ -105,4 +105,21 @@ router.delete('/:id', requireAuth, async (req, res) => {
   }
 })
 
+// Get single project
+router.get('/:id', requireAuth, async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from('projects')
+      .select('*')
+      .eq('id', req.params.id)
+      .eq('user_id', req.user.id)
+      .single()
+
+    if (error) throw error
+    if (!data) return res.status(404).json({ error: 'Project not found' })
+    res.json(data)
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+})
 module.exports = router
