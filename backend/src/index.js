@@ -5,6 +5,7 @@ const { PORT, CLIENT_URL } = require('./config')
 const authRoutes = require('./routes/auth')
 const projectsRoutes = require('./routes/projects')
 const deploymentsRoutes = require('./routes/deployments')
+const envVarsRoutes = require('./routes/envVars')
 
 const app = express()
 
@@ -18,6 +19,7 @@ app.use(cookieParser())
 app.use('/auth', authRoutes)
 app.use('/projects', projectsRoutes)
 app.use('/deployments', deploymentsRoutes)
+app.use('/env-vars', envVarsRoutes)
 
 app.get('/', (req, res) => {
   res.json({ message: 'DeployKit API is running' })

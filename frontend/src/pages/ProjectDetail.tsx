@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import api from '../lib/api'
 import Navbar from '../components/Navbar'
+import EnvVarsPanel from '../components/EnvVarsPanel'
 
 interface Project {
   id: string
@@ -227,6 +228,10 @@ function ProjectDetail() {
               ))}
             </div>
           )}
+        </div>
+          {/* Env vars */}
+        <div className="mt-8">
+          <EnvVarsPanel projectId={id!} />
         </div>
 
       </main>
