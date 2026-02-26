@@ -78,8 +78,9 @@ function ProjectDetail() {
     setSelectedDeployment(null)
 
     try {
+      const token = localStorage.getItem('token')
       const eventSource = new EventSource(
-        `${import.meta.env.VITE_API_URL}/deployments/${id}/deploy`,
+        `${import.meta.env.VITE_API_URL}/deployments/${id}/deploy?token=${token}`,
         { withCredentials: true }
       )
 

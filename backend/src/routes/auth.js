@@ -10,18 +10,14 @@ const {
   CLIENT_URL
 } = require('../config')
 
-// Step 1: Redirect to GitHub
 router.get('/github', (req, res) => {
   const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&scope=repo,user`
   res.redirect(githubAuthUrl)
 })
 
-// Step 2: GitHub redirects back with a code
 router.get('/github/callback', async (req, res) => {
   const { code } = req.query
-
   try {
-    // Exchange code for access token
     const tokenRes = await axios.post(
       'https://github.com/login/oauth/access_token',
       {
@@ -34,14 +30,12 @@ router.get('/github/callback', async (req, res) => {
 
     const accessToken = tokenRes.data.access_token
 
-    // Get user info from GitHub
     const userRes = await axios.get('https://api.github.com/user', {
       headers: { Authorization: `Bearer ${accessToken}` }
     })
 
     const githubUser = userRes.data
 
-    // Upsert user in Supabase
     const { data, error } = await supabase
       .from('users')
       .upsert({
@@ -57,7 +51,6 @@ router.get('/github/callback', async (req, res) => {
 
     if (error) throw error
 
-    // Create JWT
     const token = jwt.sign(
       {
         id: data.id,
@@ -70,15 +63,8 @@ router.get('/github/callback', async (req, res) => {
       { expiresIn: '7d' }
     )
 
-    // Set cookie and redirect to frontend
-    res.cookie('token', token, {
-      httpOnly: true,
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-      secure: process.env.NODE_ENV === 'production',
-    })
-
-    res.redirect(`${CLIENT_URL}/dashboard`)
+    // Send token in URL instead of cookie
+    res.redirect(`${CLIENT_URL}/auth/callback?token=${token}`)
 
   } catch (err) {
     console.error('GitHub OAuth error:', err.message)
@@ -86,9 +72,9 @@ router.get('/github/callback', async (req, res) => {
   }
 })
 
-// Get current user
 router.get('/me', (req, res) => {
-  const token = req.cookies.token
+  const authHeader = req.headers.authorization
+  const token = authHeader?.replace('Bearer ', '')
   if (!token) return res.status(401).json({ error: 'Not authenticated' })
 
   try {
@@ -99,9 +85,7 @@ router.get('/me', (req, res) => {
   }
 })
 
-// Logout
 router.post('/logout', (req, res) => {
-  res.clearCookie('token')
   res.json({ message: 'Logged out' })
 })
 

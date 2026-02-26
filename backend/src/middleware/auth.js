@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken')
 const { JWT_SECRET } = require('../config')
 
 function requireAuth(req, res, next) {
-  const token = req.cookies.token
+  const token = req.query.token || req.headers.authorization?.replace('Bearer ', '')
   if (!token) return res.status(401).json({ error: 'Not authenticated' })
 
   try {

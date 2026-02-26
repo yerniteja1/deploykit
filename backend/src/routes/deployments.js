@@ -21,7 +21,7 @@ router.get('/:projectId', requireAuth, async (req, res) => {
 })
 
 // Trigger a new deployment with SSE real-time logs
-router.get('/:projectId/deploy', requireAuth, async (req, res) => {
+router.post('/:projectId/deploy', requireAuth, async (req, res) => {
   const { projectId } = req.params
 
   // Verify project belongs to user
