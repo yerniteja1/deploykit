@@ -1,4 +1,4 @@
-const GITHUB_AUTH_URL = `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/auth/github`
+const GITHUB_AUTH_URL = `${import.meta.env.VITE_API_URL}/auth/github`
 
 function Login() {
   return (

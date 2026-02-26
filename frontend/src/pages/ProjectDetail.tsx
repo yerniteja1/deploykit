@@ -79,7 +79,7 @@ function ProjectDetail() {
 
     try {
       const eventSource = new EventSource(
-        `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/deployments/${id}/deploy`,
+        `${import.meta.env.VITE_API_URL}/deployments/${id}/deploy`,
         { withCredentials: true }
       )
 
