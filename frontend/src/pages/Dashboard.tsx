@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { useAuth } from '../context/AuthContext'
 import Navbar from '../components/Navbar'
 import ProjectCard from '../components/ProjectCard'
 import RepoPickerModal from '../components/RepoPickerModal'
@@ -16,7 +15,6 @@ interface Project {
 }
 
 function Dashboard() {
-  const { user } = useAuth()
   const [projects, setProjects] = useState<Project[]>([])
   const [loading, setLoading] = useState(true)
   const [showModal, setShowModal] = useState(false)
@@ -114,7 +112,7 @@ return (
         {/* Grid */}
         {!loading && projects.length > 0 && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {projects.map((project, i) => (
+            {projects.map((project) => (
               <ProjectCard
                 key={project.id}
                 project={project}
